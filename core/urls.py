@@ -5,4 +5,5 @@ from core.views import RuleView
 
 urlpatterns = [
     path('rules/', RuleView.as_view()),
+
 ]
