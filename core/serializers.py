@@ -2,7 +2,7 @@ from rest_framework import serializers
 
 
 class RuleSerializer(serializers.Serializer):
-    uid = serializers.CharField()
+    uid = serializers.IntegerField()
     source = serializers.CharField(max_length=500)
     destination = serializers.CharField(max_length=500)
     path = serializers.CharField(max_length=500)
