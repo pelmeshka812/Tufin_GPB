@@ -164,7 +164,7 @@ def check_path(src_ip_addresses, dst_ip_addresses, src, dst, src_dst_item, jid, 
                             # print(dst)
                             # print(srvc)
                             # print(response_id['device']['ip'])  # Gateway
-                            sql = "insert into main_table('id', 'msg', 'last_updated') values('" + \
+                            sql = "insert into rule('id', 'msg', 'last_updated') values('" + \
                                   jid + "', 'calling checkpoint management " + mgmt_ip + "', '" + config.now() + "' )"
                             cur = conn.cursor()
                             cur.execute(sql)

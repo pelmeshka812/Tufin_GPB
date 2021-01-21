@@ -8,7 +8,7 @@ from rest_framework import generics
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
-from core.forms import  FileForm
+from core.forms import FileForm
 from core.models import Rule, File
 from core.serializers import RuleSerializer
 
@@ -58,7 +58,7 @@ def index(request):
     if request.method == 'POST':
         r = requests.post('http://vrealize.iss.icl.kazan.ru', data={'number': 2525})
         print(r.status_code, r.reason)
-        return HttpResponse('index.html', )
+        return HttpResponse('index.html')
 
 
 class RuleList(generics.ListCreateAPIView):
