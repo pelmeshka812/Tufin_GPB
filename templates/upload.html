@@ -1,11 +1,28 @@
 {% extends 'base.html' %}
-
+{% load crispy_forms_tags %}
 {% load static %}
 
 {% block main %}
-  <form method="post" enctype="multipart/form-data">
-    {% csrf_token %}
-    <input type="file" name="myfile">
-    <button type="submit">Upload</button>
-  </form>
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-6">
+                <br>
+                <br>
+                <h2 style="text-align: center">Upload Excel files</h2>
+                <br>
+                <form method="post" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    <div class="input-group mb-3">
+                        <div class="custom-file">
+                            <input type="file" class="custom-file-input" id="inputGroupFile02">
+                            <label class="custom-file-label" for="inputGroupFile02">Choose file</label>
+                        </div>
+                        <div class="input-group-append">
+                            <span class="input-group-text" id="">Upload</span>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
 {% endblock %}

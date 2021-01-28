@@ -118,8 +118,11 @@ CRISPY_TEMPLATE_PACK = 'bootstrap4'
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/3.1/howto/static-files/
+STATICFILES_DIRS = [
+    os.path.join(BASE_DIR, "static"),
+    '/static/core/', ]
 
 STATIC_URL = '/static/'
 
-MEDIA_URL = '/excel/'
-MEDIA_ROOT = os.path.join(BASE_DIR, 'excel')
+MEDIA_URL = '/files/'
+MEDIA_ROOT = os.path.join(BASE_DIR, 'files')

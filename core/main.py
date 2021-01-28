@@ -22,6 +22,7 @@ this_id = 'id_41'
 
 def check_path(src_ip_addresses, dst_ip_addresses, src, dst, src_dst_item, jid, access_role_list):
     conn = createConnection()
+    #СОТРИ!!!
     tufin_api_user = 'admin'
     tufin_api_password = base64.b85decode(
         config.tufin_password()).decode("utf-8")

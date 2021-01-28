@@ -2,14 +2,14 @@
 {% load crispy_forms_tags %}
 
 {% block main %}
-    {% if user.is_authenticted %}
         <div class="card">
         <div class="card-body">
-        <h4 class="card-title">Home page</h4>
-        <h1>Tolya pidor</h1>
+        <h4 class="card-title">BLALALA</h4>
+        <h1>Rule</h1>
         {% block content %}
+                <p>{{ rule.source }}</p>
+                <p>{{ rule.port }}</p>
         {% endblock %}
-    {% endif %}
 </div>
 </div>
 {% endblock %}

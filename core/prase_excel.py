@@ -1,5 +1,4 @@
 import pandas as pd
-import os
 
 
 def parse_excel():
@@ -12,7 +11,7 @@ def parse_excel():
     server_groups = csv.parse('Группы серверов', header=1)
     apm_groups = csv.parse('Группы АРМ польз. и админ.', header=1)
     ad_access_group = csv.parse('Группы доступа AD')
-    # Костыль!!! Добавила пустые поля тк надо 6 элементов а не 4
+    #Костыль!!! Добавила пустые поля тк надо 6 элементов а не 4
     ad_access_group.columns = ['serial', 'group', 'assignment', 'rules', '', '']
     # apm_groups.columns['serial', 'Internal sources', 'group member', 'notes', 'group member ssp', 'username', 'IP']
 
@@ -113,7 +112,7 @@ def parse_excel():
     result_source_access_roles = result_source_access_roles.fillna('none')
     for index, row in result_source_access_roles.iterrows():
         for grp in ad_access_group_list:
-            # КОстыль НА шару сделала
+            #КОстыль НА шару сделала
             len_rule = len(str(grp[1])) - 1
             if row['AD group'] == 'none':
                 if row['Имя учетной записи участника группы'][:len_rule] == grp[1][:len_rule]:
@@ -418,11 +417,7 @@ def parse_excel():
     return result_set
 
 
-list = str(parse_excel())
-print(type(parse_excel()))
 
-f = open('../New folder/excel_result.py', 'w')
-f.write('def index():'+'\n')
-f.write('    request_item = '+ list + '\n')
-f.write('    return request_item')
-f.close()
+f = open('../New folder/text.xlrd', 'w')
+#f.write(' '.join(str(parse_excel())))
+f.write(parse_excel())

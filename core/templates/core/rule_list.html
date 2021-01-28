@@ -1,0 +1,31 @@
+{% extends  'base.html' %}
+{% load crispy_forms_tags %}
+
+{% block main %}
+    <table class="table table-hover table-bordered ">
+        <thead>
+        <tr>
+            <th>id</th>
+            <th>Source</th>
+            <th>Destination</th>
+            <th>Port</th>
+            <th>Status</th>
+            <th>Action</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for rule in object_list %}
+            <tr>
+                <td>{{ rule.id }}</td>
+                <td><p>{{ rule.source }}</p></td>
+                <td><p>{{ rule.destination }}</p></td>
+                <td><p>{{ rule.port }}</p></td>
+                <td><p>status</p></td>
+                <td class="w-15"><a href="#" class="btn btn-primary">check</a> <a href="#"
+                                                                                  class="btn btn-primary">add</a>
+                <a href="{% url 'rule_edit' rule.id %}">Edit</a></td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+{% endblock %}

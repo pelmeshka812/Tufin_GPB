@@ -12,6 +12,9 @@ class Rule(models.Model):
     message = models.CharField(max_length=500, blank=True)
     last_update = models.DateTimeField()
 
+    def get_absolute_url(self):
+        return "/rules/%i/" % self.id
+
 
 class File(models.Model):
-    excel = models.FileField()
+    excel = models.FileField(upload_to='excel/')
