@@ -1,18 +1,14 @@
 import pandas as pd
-import os
-
 
 def parse_excel():
-    # def parse_excel():
     # def parse_excel_table_template():
     # Loading excel file and parsing sheets
-    csv = pd.ExcelFile('../New folder/excel_parse.xlsx', engine='openpyxl')
+    csv = pd.ExcelFile('excel_parse.xlsx')
     passage_table = csv.parse('Таблица проходов', header=1)
     passage_table = passage_table.iloc[3:]
     server_groups = csv.parse('Группы серверов', header=1)
     apm_groups = csv.parse('Группы АРМ польз. и админ.', header=1)
     ad_access_group = csv.parse('Группы доступа AD')
-    # Костыль!!! Добавила пустые поля тк надо 6 элементов а не 4
     ad_access_group.columns = ['serial', 'group', 'assignment', 'rules', '', '']
     # apm_groups.columns['serial', 'Internal sources', 'group member', 'notes', 'group member ssp', 'username', 'IP']
 
@@ -23,8 +19,7 @@ def parse_excel():
 
     # Selecting columns C, D, G, H, I, J, K & L where column Internal Sources is not null
     selected_rows = passage_table[['Internal sources', 'Internal sources segment type', 'Internal destination',
-                                   'Internal destination segment type', 'Protocol/Service', 'Port', 'Comment', 'Status',
-                                   '№']][(passage_table['Internal sources'].notna())]
+                                'Internal destination segment type', 'Protocol/Service', 'Port', 'Comment', 'Status', '№']][(passage_table['Internal sources'].notna())]
     # print(selected_rows)
     rejected_list = []
     access_roles = []
@@ -46,7 +41,7 @@ def parse_excel():
         if type(row['№']) == float and pd.isna(row['№']):
             apm_groups.at[index, '№'] = i
             apm_groups.at[index,
-                          'Название группы\n\nВнимательно прочитайте примечание к ячейке'] = grp
+                        'Название группы\n\nВнимательно прочитайте примечание к ячейке'] = grp
         else:
             i = row['№']
             grp = row['Название группы\n\nВнимательно прочитайте примечание к ячейке']
@@ -56,7 +51,7 @@ def parse_excel():
     # Filtering matching values from Sheet 1 and 3
     result_source_access_roles = selected_rows.merge(apm_groups, on='Internal sources', how='inner').drop(
         ['№_y'], axis=1)
-    result_source_access_roles['AD group'] = 'none'
+    result_source_access_roles['AD group'] ='none'
 
     # Iterating over rows in Sheet 2 for fixing merged cells
     i = 0
@@ -73,10 +68,9 @@ def parse_excel():
 
     # Merging common Internal Sources in sheet 1 & 2
     result_source_servers_ip = selected_rows.merge(server_groups, on='Internal sources', how='inner').drop(
-        ['Internal sources segment type', 'Internal destination segment type', 'Protocol/Service', 'Port', 'Comment',
-         'Status', 'DNS имя сервера, входящего в группу', 'Краткое описание сервера, входящего в группу'], axis=1)
+        ['Internal sources segment type', 'Internal destination segment type', 'Protocol/Service', 'Port', 'Comment', 'Status', 'DNS имя сервера, входящего в группу', 'Краткое описание сервера, входящего в группу'], axis=1)
 
-    # Checking for not found sources
+    #Checking for not found sources
     not_found = []
     list_not_found = selected_rows[['Internal sources']].values.tolist()
     list_access_roles = result_source_access_roles[[
@@ -88,20 +82,20 @@ def parse_excel():
             if nf not in list_servers_ip:
                 not_found.append(nf)
 
+
     # Looking for internal destinatoin from sheet 1 in sheet 2
     server_groups.rename(columns={
         'Internal sources': 'Internal destination'}, inplace=True)
 
+
     result_destination_servers_ip = server_groups.merge(selected_rows, on='Internal destination', how='inner').drop(
-        ['DNS имя сервера, входящего в группу', 'Краткое описание сервера, входящего в группу',
-         'Internal sources segment type', 'Internal destination segment type', 'Protocol/Service', 'Port', 'Comment',
-         'Status'], axis=1)
+        ['DNS имя сервера, входящего в группу', 'Краткое описание сервера, входящего в группу', 'Internal sources segment type', 'Internal destination segment type', 'Protocol/Service', 'Port', 'Comment', 'Status'], axis=1)
     server_groups.rename(columns={
         'Internal destination': 'Internal sources'}, inplace=True)
     result_destination_servers_ip.rename(columns={
         'IP адрес сервера, входящего в группу\n\nВнимательно прочитайте примечание к ячейке': 'IP'}, inplace=True)
 
-    # Checking for not found destinations
+    #Checking for not found destinations
     result_destination_not_found = selected_rows[['Internal destination']]
 
     for index, row in result_destination_not_found.iterrows():
@@ -109,26 +103,25 @@ def parse_excel():
             result_destination_not_found = result_destination_not_found.drop(index)
 
     # Adding AD Groups
-    ad_access_group_list = ad_access_group[['group', 'rules']].values.tolist()
+    ad_access_group_list = ad_access_group[['group','rules']].values.tolist()
     result_source_access_roles = result_source_access_roles.fillna('none')
     for index, row in result_source_access_roles.iterrows():
         for grp in ad_access_group_list:
-            # КОстыль НА шару сделала
-            len_rule = len(str(grp[1])) - 1
+            len_rule = len(grp[1]) - 1
             if row['AD group'] == 'none':
                 if row['Имя учетной записи участника группы'][:len_rule] == grp[1][:len_rule]:
                     row['AD group'] = grp[0]
     # Creating list for sources
     int_src = ''
-    for index, row in result_source_access_roles.sort_values(by=['Internal sources']).iterrows():
-        if int_src != row['№_x']:
+    for index, row in result_source_access_roles.sort_values(by=['Internal sources']).iterrows():    
+        if int_src != row['№_x']:        
             access_roles_iterate.append(access_roles_pre_iterate)
             access_roles_pre_iterate = []
             access_roles.append(access_roles_iterate)
             access_roles_iterate = []
             access_roles_iterate.append(row['Internal sources'])
             access_roles_iterate.append(row['Internal destination'])
-            int_src = row['№_x']
+            int_src = row['№_x']        
             access_roles_apm.append(row['Имя учетной записи участника группы'])
             access_roles_apm.append(
                 row['IP адрес рабочей станции участника группы'])
@@ -160,7 +153,7 @@ def parse_excel():
             access_roles_iterate = []
             access_roles_iterate.append(row['Internal sources'])
             access_roles_iterate.append(row['Internal destination'])
-            int_src = row['№_x']
+            int_src = row['№_x']        
             access_roles_apm.append(
                 row['IP адрес сервера, входящего в группу\n\nВнимательно прочитайте примечание к ячейке'])
             access_roles_apm.append('none')
@@ -185,8 +178,7 @@ def parse_excel():
     access_roles_iterate = []
     access_roles_pre_iterate = []
     access_roles_dest = []
-    for index, row in result_destination_servers_ip.sort_values(
-            by=['Internal sources', 'Internal destination']).iterrows():
+    for index, row in result_destination_servers_ip.sort_values(by=['Internal sources','Internal destination']).iterrows():
         if int_dest != row['Internal destination'] or int_src != row['Internal sources']:
             access_roles_iterate.append(access_roles_pre_iterate)
             access_roles_pre_iterate = []
@@ -229,9 +221,9 @@ def parse_excel():
     access_roles_dest_df.columns = ['Internal sources', 'Internal destination', 'Destination addresses']
 
     result_df = access_roles_df.merge(
-        access_roles_dest_df, on=['Internal sources', 'Internal destination'], how='inner')
+        access_roles_dest_df, on=['Internal sources','Internal destination'], how='inner')
 
-    result_df = result_df.merge(selected_rows, on=['Internal sources', 'Internal destination'], how='inner').drop(
+    result_df = result_df.merge(selected_rows, on=['Internal sources','Internal destination'], how='inner').drop(
         ['Status', 'Internal destination segment type', 'Internal sources segment type', 'Port'], axis=1)
 
     # Adding ports
@@ -280,7 +272,7 @@ def parse_excel():
                     port_list_3.append(int_src)
                     port_list_3.append(int_dest)
                 for i in element[1]:
-                    if int_src != int_src_1:
+                    if int_src != int_src_1 or int_dest != int_dest_1:
                         int_src_1 = int_src
                         int_dest_1 = int_dest
                         port_list_1.append('TCP')
@@ -379,8 +371,7 @@ def parse_excel():
                 port_list_4.append(port_list_5)
                 port_list_3 = []
                 port_list_2 = []
-            elif item[0] not in ['TCP', 'UDP', 'TCP, UDP'] and len(item[0]) > 1 and [s for s in item[0] if
-                                                                                     not s.isdigit()]:
+            elif item[0] not in ['TCP', 'UDP', 'TCP, UDP'] and len(item[0]) > 1 and [s for s in item[0] if not s.isdigit()]:
                 if int_src_1 == '':
                     int_src_1 = int_src
                     int_dest_1 = int_dest
@@ -400,7 +391,7 @@ def parse_excel():
                 port_list_3.append(int_src_1)
                 port_list_3.append(int_dest_1)
                 port_list_3.append(port_list_2)
-                port_list_4.append(port_list_3)
+                port_list_4.append(port_list_3)            
                 port_list_3 = []
                 port_list_2 = []
         if counting == 3:
@@ -409,20 +400,16 @@ def parse_excel():
     port_list_4 = [item for item in port_list_4 if item != []]
 
     port_list_4_df = pd.DataFrame(port_list_4)
-    port_list_4_df.columns = ['Internal sources', 'Internal destination', 'ports']
+    port_list_4_df.columns = ['Internal sources', 'Internal destination','ports']
     result_df = result_df.merge(port_list_4_df, on=['Internal sources', 'Internal destination'], how='inner')
     result_df = result_df[['Internal sources', 'Source addresses',
-                           'Destination addresses', 'ports', 'Protocol/Service', 'Comment']]
-    result_set = result_df.values.tolist()
-
+                        'Destination addresses', 'ports', 'Protocol/Service', 'Comment']]
+    result_set = result_df.values.tolist()    
+        
     return result_set
 
-
-list = str(parse_excel())
-print(type(parse_excel()))
-
 result_list = parse_excel()
-f = open("../New folder/initial_request.py", "w", encoding="UTF8")
+f = open("../ansible_python/initial_request.py", "w", encoding="UTF8")
 f.write("def request():" + "\n")
 f.write(f"   current_request = {str(result_list)} \n")
 f.write(f"   return current_request")

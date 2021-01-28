@@ -18,7 +18,7 @@ urlpatterns = [
     # path('rules/', ListCreateAPIView.as_view(queryset=Rule.objects.all(), serializer_class=RuleSerializer),
     # name='rule-list'),
     path('', RuleListView.as_view(), name='list'),
-    path('rules/<int:id>/', RuleDetailView.as_view(), name='rule_detail'),
-    path('rules/<int:id>/edit/', RuleUpdateView.as_view(), name='rule_edit'),
+    path('rule/<int:id>/', RuleDetailView.as_view(), name='rule_detail'),
+    path('rule/<int:id>/edit/', RuleUpdateView.as_view(), name='rule_edit'),
     path('rules/new/', RuleCreateView.as_view(), name='rule_new')
 ]

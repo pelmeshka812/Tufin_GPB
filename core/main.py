@@ -15,6 +15,7 @@ import time
 import urllib3
 import datetime
 #import _access_role_methods
+from ansible_python import config
 
 urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 this_id = 'id_41'
@@ -78,7 +79,7 @@ def check_path(src_ip_addresses, dst_ip_addresses, src, dst, src_dst_item, jid, 
                             if device_resp['name'] == dvc_info['name']:
                                 sql = "insert into main_table('id', 'msg', 'last_updated') values('" + \
                                       jid + "', 'Generic Device ip address  = '" + device_resp[
-                                          'ip'] + "', '" + config.now() + "' )"
+                                          'ip'] + "', '" + config.now() + "' ')"
                                 cur = conn.cursor()
                                 cur.execute(sql)
                                 conn.commit()

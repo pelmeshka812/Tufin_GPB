@@ -1,4 +1,5 @@
 import requests
+from django import template
 from django.core.files.storage import FileSystemStorage
 from django.http import HttpResponseRedirect, HttpResponse
 from django.shortcuts import render, redirect

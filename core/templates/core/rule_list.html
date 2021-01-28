@@ -1,4 +1,5 @@
 {% extends  'base.html' %}
+{% load req %}
 {% load crispy_forms_tags %}
 
 {% block main %}
@@ -21,9 +22,11 @@
                 <td><p>{{ rule.destination }}</p></td>
                 <td><p>{{ rule.port }}</p></td>
                 <td><p>status</p></td>
-                <td class="w-15"><a href="#" class="btn btn-primary">check</a> <a href="#"
-                                                                                  class="btn btn-primary">add</a>
-                <a href="{% url 'rule_edit' rule.id %}">Edit</a></td>
+                <td class="w-15"><button onclick="{% req %}" class="btn btn-primary">add</button>
+                    <form action="" method="post">{% csrf_token %}
+                        <button >Cancel</button>
+                    </form>
+                    <a href="{% url 'rule_edit' rule.id %}">Edit</a></td>
             </tr>
         {% endfor %}
         </tbody>
