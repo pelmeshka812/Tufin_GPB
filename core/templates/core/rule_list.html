@@ -22,9 +22,12 @@
                 <td><p>{{ rule.destination }}</p></td>
                 <td><p>{{ rule.port }}</p></td>
                 <td><p>status</p></td>
-                <td class="w-15"><button onclick="{% req %}" class="btn btn-primary">add</button>
-                    <form action="" method="post">{% csrf_token %}
-                        <button >Cancel</button>
+                <td class="w-15">
+                    <button onclick="req" class="btn btn-primary">add</button>
+                    <form action="/" method="post">{% csrf_token %}
+                        {{ form }}
+                        <button onclick="{% req rule.source rule.destination rule.port%}">Cancel</button>
+                        <button type="submit">OK</button>
                     </form>
                     <a href="{% url 'rule_edit' rule.id %}">Edit</a></td>
             </tr>

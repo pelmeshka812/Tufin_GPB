@@ -1,7 +1,23 @@
+import time
+from datetime import datetime
+
 import requests
 
-# r1 = requests.get('http://10.1.101.215:8080/oo/rest/latest/executions/')
-# print(r.status_code, r.reason, r)
-r1 = requests.get('https://vrealize.iss.icl.kazan.ru:443/vco/api/workflows/5e8f698f-a130-4f8f-86a5-37d35e6611e4/')
-id = r1.content.decode('UTF-8')
-print(r1.status_code)
+from .models import Rule
+
+
+def req():
+    p = Rule.objects.filter(id=2)
+    print(p)
+    # in_1 = '1'
+    # in_2 = 'chmo'
+    # in_3 = '228'
+    # f = {"flowUuid": "Foled.Flow", "inputs": {"flow_input_0": in_1, "flow_input_1": in_2, "flow_input_2": in_3},
+    #      "logLevel": "EXTENDED", "inputPromptUseBlank": "false", "triggerType": "MANUAL"}
+    # r1 = requests.post('http://10.1.101.215:8080/oo/rest/latest/executions', json=f)
+    # print('request')
+    # print(r1.status_code)
+    # time.sleep(5)
+    # r = requests.get('http://10.1.101.215:8080/oo/rest/latest/executions/')
+    # print(r.status_code, type(r.content))
+    # print(datetime.now())

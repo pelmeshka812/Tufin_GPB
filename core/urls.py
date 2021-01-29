@@ -7,6 +7,7 @@ from rest_framework.generics import ListCreateAPIView
 from core import views
 from core.models import Rule
 from core.serializers import RuleSerializer
+from core.templatetags import req
 from core.views import RuleView, CreateFileView, RuleListView, RuleDetailView, RuleUpdateView, RuleCreateView
 
 urlpatterns = [
@@ -18,7 +19,8 @@ urlpatterns = [
     # path('rules/', ListCreateAPIView.as_view(queryset=Rule.objects.all(), serializer_class=RuleSerializer),
     # name='rule-list'),
     path('', RuleListView.as_view(), name='list'),
-    path('rule/<int:id>/', RuleDetailView.as_view(), name='rule_detail'),
+    path('rule/<int:id>/detail/', RuleDetailView.as_view(), name='rule_detail'),
     path('rule/<int:id>/edit/', RuleUpdateView.as_view(), name='rule_edit'),
-    path('rules/new/', RuleCreateView.as_view(), name='rule_new')
+    path('rules/new/', RuleCreateView.as_view(), name='rule_new'),
+    path('req/', req.req),
 ]

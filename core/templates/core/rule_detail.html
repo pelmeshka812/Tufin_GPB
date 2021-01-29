@@ -2,13 +2,14 @@
 {% load crispy_forms_tags %}
 
 {% block main %}
-        <div class="card">
+    <div class="card">
         <div class="card-body">
-        <h4 class="card-title">Rule </h4>
+            <h4 class="card-title">Rule </h4>
+            {% if rule in rule_list %}
+            <p>{{ rule.source }}</p>
+            <p>{{ rule.port }}</p>
+            {% endif %}
 
-                <p>{{ rule.source }}</p>
-                <p>{{ rule.port }}</p>
-
-</div>
-</div>
+        </div>
+    </div>
 {% endblock %}

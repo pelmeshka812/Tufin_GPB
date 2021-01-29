@@ -1,3 +1,6 @@
+import time
+from datetime import datetime
+
 import requests
 from django import template
 from django.core.files.storage import FileSystemStorage
@@ -51,6 +54,7 @@ class RuleUpdateView(UpdateView):
     template_name = 'core/rule_edit.html'
     pk_url_kwarg = "id"
     fields = ['source', 'destination', 'port']
+    success_url = reverse_lazy('list')
 
 
 """def excel_file(request):
@@ -126,3 +130,26 @@ class RuleList(generics.ListCreateAPIView):
         queryset = self.get_queryset()
         serializer = RuleSerializer(queryset, many=True)
         return Response(serializer.data)
+
+
+def index(request):
+    people = Rule.objects.all()
+    return render(request, "index.html", {"people": people})
+
+
+def req(request, id):
+    src = '3.3.3.3'
+    dst = '10.1.101.12'
+    port = '22'
+    f = {"flowUuid": "Foled.Flow", "inputs": {"flow_input_0": src, "flow_input_1": dst, "flow_input_2": port},
+         "logLevel": "EXTENDED", "inputPromptUseBlank": "false", "triggerType": "MANUAL"}
+    r1 = requests.post('http://10.1.101.215:8080/oo/rest/latest/executions', json=f)
+    print('request')
+    print(r1.status_code)
+    time.sleep(5)
+    r = requests.get('http://10.1.101.215:8080/oo/rest/latest/executions/')
+    print(r.status_code, type(r.content))
+    print(datetime.now())
+    print(datetime.now(), 'sadddd')
+    f = open("test.txt", "w", encoding="UTF8")
+    f.write(str(datetime.now()))

@@ -26,8 +26,10 @@ r2 = requests.get('https://vrealize.iss.icl.kazan.ru/vco/api/workflows?condition
 print(r2.status_code)
 dict = json.loads(r2.content.decode('utf-8'))
 # ВАЖНООООООООООООООООООООООООООООООООООООООООООООООООООООООООООООООООООООООООООО
+url = dict['link'][0]['attributes'][0]['value']
 
-print(dict['link'][0])
+print()
+
 #print(dict[0]["status"])
 # if dict[0]["status"] == 'COMPLETED':
 # dict = json.loads(r2.content.decode('utf-8'))
