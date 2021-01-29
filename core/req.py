@@ -30,7 +30,7 @@ url = dict['link'][0]['attributes'][0]['value']
 
 print()
 
-#print(dict[0]["status"])
+print(dict)
 # if dict[0]["status"] == 'COMPLETED':
 # dict = json.loads(r2.content.decode('utf-8'))
 # print(dict[0]["flowOutput"])

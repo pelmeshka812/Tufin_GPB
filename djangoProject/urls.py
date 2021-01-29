@@ -22,8 +22,9 @@ from djangoProject import settings
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('', include('core.urls')),
-
+    path('accounts/', include('django.contrib.auth.urls')),
+    path('rules/', include('core.urls')),
+    path('', views.model_form_upload),
 
 
 ]

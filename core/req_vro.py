@@ -4,22 +4,22 @@ import time
 import requests
 from requests.auth import HTTPBasicAuth
 
-WORKFLOW_ID = "5e8f698f-a130-4f8f-86a5-37d35e6611e4"
+WORKFLOW_ID = "43746ca1-b01b-4d4d-a184-d036c540797c"
 body = {
     "parameters": [
         {"value": {"string": {"value": "22"}},
          "type": "string",
-         "name": "ti1",
+         "name": "Source",
          "scope": "local"
          },
         {"value": {"string": {"value": "33"}},
          "type": "string",
-         "name": "ti2",
+         "name": "Destination",
          "scope": "local"
          },
         {"value": {"string": {"value": "44"}},
          "type": "string",
-         "name": "ti1",
+         "name": "Service",
          "scope": "local"
          }
     ]
@@ -28,8 +28,12 @@ body = {
 # print(r.status_code, r.reason, r)
 # POST_RESULT = requests.post('https://vrealize.iss.icl.kazan.ru/vco/api/workflows/' + WORKFLOW_ID + '/executions/',
 #                             auth=HTTPBasicAuth('vro_api_user@vcenter.local', '1Q2w3e4r@'), verify=False, json=body)
-POST_RESULT = requests.post('https://vrealize.iss.icl.kazan.ru:443/vco/api/workflows/164a5bec-6b58-4d6e-889f-50117df2d537/executions/',
+POST_RESULT = requests.post('https://vrealize.iss.icl.kazan.ru:443/vco/api/workflows/' + WORKFLOW_ID + '/executions/',
                             auth=HTTPBasicAuth('vro_api_user@vcenter.local', '1Q2w3e4r@'), verify=False, json=body)
+r = requests.get(
+    'https://vrealize.iss.icl.kazan.ru:443/vco/api/workflows/43746ca1-b01b-4d4d-a184-d036c540797c/executions/05aff767-974c-4a86-860f-d03db7087dd8/',
+    auth=HTTPBasicAuth('vro_api_user@vcenter.local', '1Q2w3e4r@'), verify=False)
 
-
-print(POST_RESULT.status_code, POST_RESULT.content)  ## if 200/ 202 - all is zbs
+# r = requests.get('https://vrealize.iss.icl.kazan.ru:443/vco/api/workflows/'+WORKFLOW_ID+'/executions/', auth=HTTPBasicAuth('vro_api_user@vcenter.local', '1Q2w3e4r@'), verify=False)
+# print(POST_RESULT.status_code, POST_RESULT.content)  ## if 200/ 202 - all is zbs
+print(r.status_code, r.content)

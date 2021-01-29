@@ -10,26 +10,27 @@
             <th>Source</th>
             <th>Destination</th>
             <th>Port</th>
+            <th>User Group</th>
             <th>Status</th>
             <th>Action</th>
         </tr>
         </thead>
         <tbody>
-        {% for rule in object_list %}
+        {% for rule in rules %}
             <tr>
-                <td>{{ rule.id }}</td>
+                <td><a href="{% url 'rule_detail' rule.id %}">{{ rule.id }}</a></td>
                 <td><p>{{ rule.source }}</p></td>
                 <td><p>{{ rule.destination }}</p></td>
                 <td><p>{{ rule.port }}</p></td>
-                <td><p>status</p></td>
+                <td><p>{{ rule.user_group }}</p></td>
+                <td><p>{{ rule.status }}</p></td>
                 <td class="w-15">
-                    <button onclick="req" class="btn btn-primary">add</button>
-                    <form action="/" method="post">{% csrf_token %}
-                        {{ form }}
-                        <button onclick="{% req rule.source rule.destination rule.port%}">Cancel</button>
-                        <button type="submit">OK</button>
+                    <form action="" method="post" >{% csrf_token %}
+                        <input type="text" hidden name="id" value="{{ rule.id }}">
+                        <button class="btn btn-primary">Add</button>
+                        <a class="btn btn-primary" href="{% url 'rule_edit' rule.id %}">Edit</a>
                     </form>
-                    <a href="{% url 'rule_edit' rule.id %}">Edit</a></td>
+                    </td>
             </tr>
         {% endfor %}
         </tbody>

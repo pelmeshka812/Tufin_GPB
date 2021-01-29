@@ -1,3 +1,4 @@
+import json
 import time
 from datetime import datetime
 
@@ -6,7 +7,7 @@ from django import template
 from django.core.files.storage import FileSystemStorage
 from django.http import HttpResponseRedirect, HttpResponse
 from django.shortcuts import render, redirect
-from django.urls import reverse_lazy
+from django.urls import reverse_lazy, reverse
 from django.views.generic import CreateView, ListView, UpdateView
 from rest_framework import generics
 from rest_framework.response import Response
@@ -39,13 +40,21 @@ class CreateFileView(CreateView):
 
 class RuleListView(ListView):
     model = Rule
+    context_object_name = 'rules'
     template_name = 'core/rule_list.html'
     pk_url_kwarg = "id"
+
+    def post(self, request):
+        id = request.POST['id']
+        rule = Rule.objects.get(id=id)
+        req(rule)
+        return render(request, "core/rule_list.html", {'rules': Rule.objects.all()})
 
 
 class RuleDetailView(ListView):
     model = Rule
     template_name = 'core/rule_detail.html'
+    context_object_name = 'rule'
     pk_url_kwarg = "id"
 
 
@@ -137,19 +146,29 @@ def index(request):
     return render(request, "index.html", {"people": people})
 
 
-def req(request, id):
-    src = '3.3.3.3'
-    dst = '10.1.101.12'
-    port = '22'
-    f = {"flowUuid": "Foled.Flow", "inputs": {"flow_input_0": src, "flow_input_1": dst, "flow_input_2": port},
-         "logLevel": "EXTENDED", "inputPromptUseBlank": "false", "triggerType": "MANUAL"}
-    r1 = requests.post('http://10.1.101.215:8080/oo/rest/latest/executions', json=f)
-    print('request')
-    print(r1.status_code)
-    time.sleep(5)
-    r = requests.get('http://10.1.101.215:8080/oo/rest/latest/executions/')
-    print(r.status_code, type(r.content))
-    print(datetime.now())
-    print(datetime.now(), 'sadddd')
-    f = open("test.txt", "w", encoding="UTF8")
-    f.write(str(datetime.now()))
+def req(rule):
+    if rule.status != "COMPLETED":
+        src = rule.source
+        dst = rule.destination
+        port = rule.port
+        f = {"flowUuid": "Foled.Flow", "inputs": {"flow_input_0": src, "flow_input_1": dst, "flow_input_2": port},
+             "logLevel": "EXTENDED", "inputPromptUseBlank": "false", "triggerType": "MANUAL"}
+        r1 = requests.post('http://10.1.101.215:8080/oo/rest/latest/executions', json=f)
+        print('request')
+        print(r1.status_code)
+        time.sleep(5)
+        r = requests.get('http://10.1.101.215:8080/oo/rest/latest/executions/')
+        print(r.status_code, type(r.content))
+        dict = json.loads(r.content.decode('utf-8'))
+        st = dict[0]["status"]
+        rule.status = st
+        rule.save()
+        print(st)
+        print(datetime.now(), 'badddd')
+        f = open("test.txt", "w", encoding="UTF8")
+        f.write(str(datetime.now()))
+        return r.status_code
+
+
+def redirect():
+    return HttpResponseRedirect(reverse('home'))

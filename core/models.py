@@ -6,11 +6,12 @@ class Rule(models.Model):
     source = models.CharField(max_length=500)
     destination = models.CharField(max_length=500)
     port = models.IntegerField()
+    user_group = models.CharField(max_length=500)
     comment = models.CharField(max_length=500, blank=True)
     protocol = models.CharField(max_length=500, blank=True)
     status = models.CharField(max_length=50, blank=True)  # choices
     message = models.CharField(max_length=500, blank=True)
-    last_update = models.DateTimeField()
+    last_update = models.DateTimeField(auto_now=True)
 
     def get_absolute_url(self):
         return "/rules/%i/" % self.id
